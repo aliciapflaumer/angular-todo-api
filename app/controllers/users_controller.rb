@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+  # before_action :set_user, only: [:show, :update, :destroy]
+  before_action :authenticate, only: %i[signup signin]
 
   # POST '/sign-up'
   def signup
@@ -11,7 +12,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # POST '/sign-in'
+    # POST '/sign-in'
     def signin
       creds = user_params
       if (user = User.authenticate creds[:username],
