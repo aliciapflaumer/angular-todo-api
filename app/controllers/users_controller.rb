@@ -1,6 +1,16 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
 
+  # POST '/sign-up'
+  def signup
+    user = User.create(user_params)
+    if user.valid?
+      render json: user, status: :created
+    else
+      render json: user.errors, status: :bad_request
+    end
+  end
+
   # GET /users
   def index
     @users = User.all
@@ -46,6 +56,8 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:username, :password_digest)
+      params.require(:credentials).permit(:username, :password_digest)
     end
+
+    private :user_params
 end
