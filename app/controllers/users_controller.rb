@@ -11,6 +11,17 @@ class UsersController < ApplicationController
     end
   end
 
+  # POST '/sign-in'
+    def signin
+      creds = user_params
+      if (user = User.authenticate creds[:username],
+                                   creds[:password])
+        render json: user, serializer: UserLoginSerializer, root: 'user'
+      else
+        head :unauthorized
+      end
+    end
+
   # GET /users
   def index
     @users = User.all
