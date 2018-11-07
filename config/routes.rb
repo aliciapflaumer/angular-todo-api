@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
-  resources :tasks
-  resources :users
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  # devise_for :users
   post '/sign-up' => 'users#signup'
   post '/sign-in' => 'users#signin'
+  
+  resources :tasks
+  resources :users
+  resources :sessions, only: [:create, :destroy]
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
