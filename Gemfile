@@ -19,7 +19,7 @@ gem 'bcrypt-ruby'
 gem 'devise'
 
 gem "loofah", ">= 2.2.3"
-
+gem "rack", ">= 2.0.6"
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
