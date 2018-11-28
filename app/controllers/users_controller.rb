@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  # before_action :set_user, only: [:show, :update, :destroy]
-  before_action :authenticate, only: %i[signup signin]
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  # before_action :authenticate, only: %i[signup signin]
 
   # POST '/sign-up'
   def signup
@@ -24,40 +24,60 @@ class UsersController < ApplicationController
     end
 
   # GET /users
+  # GET /users.json
   def index
     @users = User.all
-
-    render json: @users
   end
 
   # GET /users/1
+  # GET /users/1.json
   def show
-    render json: @user
+    @user = User.find(params[:id])
+    @tasks = @user.tasks
   end
 
+  # GET /users/new
+  def new
+    @user = User.new
+  end
+
+  # GET /users/1/edit
+  def edit; end
+
   # POST /users
+  # POST /users.json
+
   def create
     @user = User.new(user_params)
-
     if @user.save
-      render json: @user, status: :created, location: @user
+      redirect_to root_url, notice: 'Thank you for signing up!'
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render :new
     end
   end
 
   # PATCH/PUT /users/1
+  # PATCH/PUT /users/1.json
   def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :edit }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   # DELETE /users/1
+  # DELETE /users/1.json
   def destroy
     @user.destroy
+    respond_to do |format|
+      format.html { redirect_to users_url, notice: 'User was successfully deleted.' }
+      format.json { head :no_content }
+    end
   end
 
   private
@@ -66,10 +86,9 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+    # Never trust parameters from the scary internet, only allow the white list through.
+    # removed `require(:user).` after params.
     def user_params
-      params.require(:credentials).permit(:username, :password_digest)
+      params.permit(:username, :password, :password_confirmation)
     end
-
-    private :user_params
 end
