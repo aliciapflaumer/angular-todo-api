@@ -16,7 +16,6 @@ gem 'puma', '~> 3.11'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 gem 'bcrypt-ruby'
-gem 'devise'
 
 gem "loofah", ">= 2.2.3"
 gem "rack", ">= 2.0.6"

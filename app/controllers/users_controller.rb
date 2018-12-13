@@ -34,16 +34,17 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    @tasks = @user.tasks
+    # @tasks = @user.tasks
+    render json: user
   end
 
   # GET /users/new
-  def new
-    @user = User.new
-  end
+  # def new
+  #   @user = User.new
+  # end
 
   # GET /users/1/edit
-  def edit; end
+  # def edit; end
 
   # POST /users
   # POST /users.json
