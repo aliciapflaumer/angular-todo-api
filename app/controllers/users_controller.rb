@@ -1,10 +1,11 @@
+# frozen_string_literal :true
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  # before_action :set_user, only: %i[show edit update destroy signup signin]
   # before_action :authenticate, only: %i[signup signin]
 
   # POST '/sign-up'
   def signup
-    user = User.create(user_params)
+    user = User.new(user_params)
     if user.valid?
       render json: user, status: :created
     else
@@ -12,16 +13,16 @@ class UsersController < ApplicationController
     end
   end
 
-    # POST '/sign-in'
-    def signin
-      creds = user_params
-      if (user = User.authenticate creds[:username],
-                                   creds[:password])
-        render json: user, serializer: UserLoginSerializer, root: 'user'
-      else
-        head :unauthorized
-      end
+  # POST '/sign-in'
+  def signin
+    creds = user_params
+    if (user = User.authenticate creds[:username],
+                                 creds[:password])
+      render json: user, serializer: UserLoginSerializer, root: 'user'
+    else
+      head :unauthorized
     end
+  end
 
   # GET /users
   # GET /users.json
@@ -33,16 +34,17 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    @tasks = @user.tasks
+    # @tasks = @user.tasks
+    render json: user
   end
 
   # GET /users/new
-  def new
-    @user = User.new
-  end
+  # def new
+  #   @user = User.new
+  # end
 
   # GET /users/1/edit
-  def edit; end
+  # def edit; end
 
   # POST /users
   # POST /users.json
@@ -81,14 +83,16 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    # removed `require(:user).` after params.
-    def user_params
-      params.permit(:username, :password, :password_confirmation)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  # def set_user
+  #   @user = User.find(params[:id])
+  # end
+  # removed `require(:user).` after params.
+  def user_params
+    params.require(:credentials)
+          .permit(:username, :password, :password_confirmation)
+  end
+
+  private :user_params
 end
